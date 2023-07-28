@@ -1,0 +1,12 @@
+globals {
+  api_token_id = "terraform-prov@pve!terraform-token"
+  api_token_secret = "c765a121-8b3c-4c3a-be06-27b57f9bc8e1"
+  tf_user = "root@pam"
+  tf_passwd = ""
+  api_url = "https://192.168.10.201:8006/api2/json"
+
+  target_node = "prox-micro-02"
+  ssh_pub_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQMxI1rSPxaVO3cmUKj5SgsRwB0jhzjXft8/F83/T7HC0GSzgmitEEW/SIxXV7t7AM1lFoyanjjpnTJVjz9eRweqTlhHgbmOfrDt5JORdIXIwhJICOj2TQB3jVUgXO6d2jGS/xZCIr/yl7mnQE1wUzFerZbgxAYbHaWFFM/JX6W9f4gbOKF1wbyyFFs1QG5XQfk+qWUofSAjKDkDd0wK8JDM/k4w6lw8m1aPiAe90wbj1H2h+yl8NyqzL8U3LPLrZL7WrOqOs8+auKN4BVOZIUpwB8wSRn+Fcr2LD9ZdYAhDmQAxB0noZQ3+Mvb7y3rshxqZ19Be/g0UmzjRtOb4n2Vpt7X/KxEWQiiRjrMMiqFLw8jAHmOX1EwaG1mCtYr9p2G7v9Cc7AJiKiS+q1ZG7s8BoDCWn22zvfTaPwD0/Jkb7ckQqPXGPWXzPSxEGZk2H+Pf24B5s77ok/tXjzlcxKdgKVwfIceYndsc4tl5mnmF1upa3qYd3KsgeSTCtnGxM= administrator@auto-controller-02"
+  container_passwd = "password"
+  gateway = "192.168.10.1"
+}

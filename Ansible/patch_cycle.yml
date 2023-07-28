@@ -1,0 +1,19 @@
+---
+- name: Patch cycle for Ubuntu servers
+  hosts: test
+  become: false
+
+  tasks:
+
+    - name: Update and upgrade apt packages
+      become: true
+      ansible.builtin.apt:
+        update_cache: yes
+        name: "*"
+        state: latest
+
+    - name: Reboot hosts
+      become: true
+      ansible.builtin.reboot:
+        reboot_timeout: 5
+        post_reboot_delay: 60
