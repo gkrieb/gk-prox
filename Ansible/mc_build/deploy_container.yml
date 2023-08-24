@@ -1,0 +1,17 @@
+---
+- hosts: test
+  tasks:
+    - name: 
+      community.general.proxmox:
+        api_host: "{{ prox_node }}"
+        api_user: "{{ api_user }}"
+        api_pass: "{{ api_pass }}"
+        ostemplate: "{{ os_template }}"
+        state: started
+        storage: local-lvm
+        pub_key: "{{ public_key }}"
+        hostname: "{{ cont_hostname }}"
+        pool: "{{ cont_pool }}"
+        cores: 1
+        cpus: 1
+        disk: 1
