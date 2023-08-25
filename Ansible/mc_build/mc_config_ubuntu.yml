@@ -1,0 +1,50 @@
+---
+- hosts: mc_test
+  remote_user: worker
+  tasks:
+
+    #
+    # Create directory and docker-compose file
+    #
+    - name: Create directory for minecraft server
+      ansible.builtin.file:
+        path: /home/worker/mc_docker
+        state: directory
+
+    - name: Create docker compose file
+      ansible.builtin.copy:
+        dest: /home/worker/mc_docker/docker-compose.yml
+        content: |
+          version: "3.8"
+
+          services:
+            mc:
+              image: itzg/minecraft-server
+              restart: always
+              tty: true
+              stdin_open: true
+              ports:
+                - "25565:25565"
+              environment:
+                EULA: "TRUE"
+                MEMORY: "2G"
+              volumes:
+                # attach the relative directory 'data' to the container's /data path
+                - /opt/minecraft:/data
+
+
+    #
+    # Start docker compose
+    #
+    - name: Create cron job for starting docker compose
+      cron:
+        name: Ensure docker compose is started at reboot
+        special_time: reboot
+        user: worker
+        job: docker-compose -f /home/worker/mc_docker/docker-compose.yml up -d
+
+    - name: Reboot hosts
+      become: true
+      ansible.builtin.reboot:
+        reboot_timeout: 5
+        post_reboot_delay: 30
