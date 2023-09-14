@@ -1,0 +1,82 @@
+Minecraft docker-compose setup on Ubuntu:
+	1. Create Ubuntu 22.04 image
+		a. Disk: 20GB
+		b. RAM: 4GB
+		c. CPUs: 1 core, 1 socket
+		d. Update all packages
+		e. Assign static IP
+  
+	2. Assign port forwarding rules for TCP port MINECRAFT_SERVER_IP:25565 on router
+ 
+	3. Update and upgrade all apt packages:
+		a. $ sudo apt update -y && sudo apt upgrade -y
+  
+	4. Set timezone to America/New_York
+		a. $ sudo timedatectl set-timezone America/New_York
+  
+	5. Install vim (if not already installed)
+		a. $ sudo apt install vim  -y
+  
+	6. Install latest docker - paste full and run this script in the terminal:
+ 
+		# Add Docker's official GPG key:
+		sudo apt-get update
+		sudo apt-get install ca-certificates curl gnupg -y
+		sudo install -m 0755 -d /etc/apt/keyrings
+		curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+		sudo chmod a+r /etc/apt/keyrings/docker.gpg
+		
+		# Add the repository to Apt sources:
+		echo \
+		  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+		  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+		  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+		sudo apt-get update -y
+  
+	7. Install docker-compose:
+		a. sudo apt install docker-compose -y
+  
+	8. Create new worker user
+		a. $ sudo adduser worker
+  
+	9. Set password for worker user
+		a. $ sudo passwd worker
+  
+	10. Change permissions on the docker socket:
+		a. $ sudo chmod 666 /var/run/docker.sock
+  
+	11. Add worker to docker group:
+		a. $ sudo groupadd docker
+		b. $ sudo usermod -aG docker worker
+  
+	12. Switch to worker:
+		a. $ su worker
+  
+	13. Create directory to run the docker container:
+		a. $ mkdir ~/mc_docker
+		b. $ cd mc_docker
+  
+	14. Create docker compose configuration file:
+		a. $ vim docker-compose.yml
+		b. Paste below yaml into the file:
+	
+version: "3.8"
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    restart: always
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      MEMORY: "2G"
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+       - ./data:/data
+
+	
+	12. Start docker container:
+    $ docker compose up -d
