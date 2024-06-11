@@ -1,0 +1,24 @@
+---
+- name: Create a VM
+  community.general.proxmox:
+    node: prox-01
+    api_host: "{{ prox_node }}"
+    api_user: "{{ api_user }}"
+    api_password: "{{ api_pass }}"
+    #ostemplate: "{{ os_template }}"
+    state: started
+    #storage: zfs-01 # Remove this to create a linked clone
+    #pub_key: "{{ public_key }}"
+    hostname: test-02
+    clone: 203
+    #pool: "{{ cont_pool }}"
+    cores: 1
+    cpus: 1
+    disk: 1
+    memory: 1024
+    features:
+      - nesting=1
+      - fuse=1
+      - keyctl=1
+    netif: '{"net0":"name=eth0,gw=10.1.23.1,ip=10.1.23.60/24,bridge=vmbr23"}'
+    nameserver: 8.8.8.8

@@ -1,0 +1,33 @@
+---
+- name: Allow port forwarding rule for Minecraft
+  pfsensible.core.pfsense_nat_port_forward:
+    descr: 'mc-01'
+    interface: wan
+    source: any
+    destination: 192.168.1.168:25565
+    target: 10.1.21.4:25565
+    associated_rule: pass
+    state: present
+  become: true
+
+- name: Allow port forwarding rule for PiHole
+  pfsensible.core.pfsense_nat_port_forward:
+    descr: 'pihole-01'
+    interface: wan
+    source: any:53
+    destination: 192.168.1.168:53
+    target: 10.1.21.3:53
+    associated_rule: pass
+    state: absent
+  become: true
+
+- name: Allow port forwarding rule for Minecraft dev
+  pfsensible.core.pfsense_nat_port_forward:
+    descr: 'mc-dev'
+    interface: wan
+    source: any
+    destination: 192.168.1.168:25569
+    target: 10.1.21.3:25569
+    associated_rule: pass
+    state: present
+  become: true

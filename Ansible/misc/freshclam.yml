@@ -1,7 +1,0 @@
----
-- hosts: test
-  tasks:
-
-  - name: Run freshclam
-    become: true
-    ansible.builtin.shell: freshclam

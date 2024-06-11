@@ -1,0 +1,10 @@
+---
+- name: Run shell commands
+  shell: |
+    hostname
+    whoami
+  register: shell_output
+
+- name: Print shell output
+  debug:
+    msg: "{{ shell_output }}"

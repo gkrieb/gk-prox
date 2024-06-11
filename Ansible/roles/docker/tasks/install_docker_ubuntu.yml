@@ -1,0 +1,70 @@
+---
+- name: Update the apt package index
+  ansible.builtin.apt:
+    update_cache: yes
+  become: yes
+
+- name: Install packages to allow apt to use a repository over HTTPS
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    state: present
+  become: yes
+
+- name: Add Docker's official GPG key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker's APT repository
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+- name: Update the apt package index again
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install Docker CE
+  ansible.builtin.apt:
+    name: docker-ce
+    state: present
+
+- name: Install Docker CE CLI
+  ansible.builtin.apt:
+    name: docker-ce-cli
+    state: present
+
+- name: Install containerd.io
+  ansible.builtin.apt:
+    name: containerd.io
+    state: present
+
+- name: Ensure Docker service is started and enabled
+  ansible.builtin.systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Download Docker Compose
+  ansible.builtin.get_url:
+    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}"
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'
+
+- name: Ensure Docker Compose is executable
+  ansible.builtin.file:
+    path: /usr/local/bin/docker-compose
+    mode: '0755'
+    state: file
+  become: yes
+
+- name: Verify Docker Compose installation
+  ansible.builtin.command: docker-compose --version
+  register: docker_compose_version_output
+
+- debug:
+    msg: "Docker Compose version: {{ docker_compose_version_output.stdout }}"

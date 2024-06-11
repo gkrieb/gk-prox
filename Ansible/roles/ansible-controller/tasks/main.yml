@@ -1,0 +1,51 @@
+---
+- name: Copy repo to ansible controller locally
+  copy:
+    src: /home/ansible/repo/roles/ansible-controller/files/sample-playbook.yml
+    dest: /tmp/sample-playbook.yml
+    owner: root
+  become: true
+
+- name: Configure ansible script
+  ansible.builtin.shell: |
+    # Create .ssh directory
+    su -c 'mkdir -p ~/.ssh' {{ ansible_user }}
+    # Create RSA file
+    su -c 'cat <<EOF > ~/.ssh/id_rsa
+    {{ ssh_private_key }}
+    EOF' {{ ansible_user }}
+    # Change permissions on id_rsa file
+    su -c 'chmod 400 ~/.ssh/id_rsa' {{ ansible_user }}
+    # Install ansible-core
+    sudo yum update -y
+    sudo yum install -y epel-release
+    sudo yum install -y ansible
+    # Create ansible repo
+    mkdir -p /tmp/ansible
+    # Copy playbook.yml
+    cp /tmp/sample-playbook.yml /tmp/ansible/playbook.yml
+    # Create host inventory file
+    cat <<EOF > /tmp/ansible/inventory
+    [main]
+    10.1.23.[102:103]
+    EOF
+    # Create ansible.cfg file to prevent ssh prompt
+    cat <<EOF > /tmp/ansible/ansible.cfg
+    [defaults]
+    host_key_checking = False
+    EOF
+    # Run ansible playbook
+    cd /tmp/ansible
+    su -c 'ansible-playbook -i /tmp/ansible/inventory /tmp/ansible/playbook.yml'  {{ ansible_user }}
+  become: true
+  register: shell_out
+
+# - shell: |
+#     hostname
+#     hostname -I
+#   register: shell_out
+
+- ansible.builtin.debug:
+    msg: "{{ shell_out.stdout_lines }}"
+
+

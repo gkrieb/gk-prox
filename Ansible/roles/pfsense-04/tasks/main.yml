@@ -1,0 +1,11 @@
+---
+- name: Add port forwarding rule for Minecraft
+  pfsensible.core.pfsense_nat_port_forward:
+    descr: 'mc-01'
+    interface: wan
+    source: any
+    destination: 10.1.21.4:25565
+    target: 10.1.24.30:25565
+    associated_rule: pass
+    state: present
+  become: true

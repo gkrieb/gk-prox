@@ -1,0 +1,52 @@
+---
+- name: Linux patch cycle
+  when: ansible_os_family != "Windows"
+  block:
+    - name: Set timezone to America/New_York
+      community.general.timezone:
+        name: America/New_York
+      become: true
+
+    - name: Upgrade all rpm packages
+      yum:
+        name: '*'
+        state: latest
+      become: true
+      when: >
+        ansible_distribution == "Rocky" or
+        ansible_os_family == "RedHat"
+      register: rpm_result
+
+    - name: Upgrade all apt packages
+      apt:
+        update_cache: true
+        name: "*"
+        state: latest
+      become: true
+      when: ansible_distribution == "Ubuntu"
+      register: apt_result
+
+    - name: Upgrade all FreeBSD packages
+      shell: |
+        pkg-static update -fq
+      become: true
+      when: ansible_distribution == "FreeBSD"
+      register: bsd_result
+
+    - name: Reboot
+      become: true
+      reboot:
+
+- name: Windows patch cycle
+  when: ansible_os_family == "Windows"
+  vars:
+  block:
+    - name: Install Windows updates
+      win_updates:
+        category_names: "{{ windows_update_categories }}"
+        state: installed
+      register: update_result
+
+    - name: Reboot the server if necessary
+      win_reboot:
+      when: update_result.reboot_required

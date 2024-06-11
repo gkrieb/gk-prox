@@ -1,0 +1,13 @@
+- name: test playbook
+  hosts: all
+  remote_user: ansible
+  tasks:
+    - shell: |
+        hostname
+        hostname -I
+        whoami
+      register: shell_out
+      become: true
+
+    - debug:
+        msg: "{{ shell_out.stdout }}"

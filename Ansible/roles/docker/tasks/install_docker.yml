@@ -1,0 +1,88 @@
+---
+- name: Upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+  become: yes
+
+# - name: Install firewalld
+#   yum:
+#     name: firewalld
+#     state: latest
+#   become: yes
+
+- name: Install yum-utils
+  yum:
+    name: yum-utils
+    state: latest
+  become: yes
+
+- name: Add Docker repository
+  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  become: yes
+
+- name: Install Docker engine
+  yum:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+  become: yes
+
+- name: Create docker group
+  group:
+    name: docker
+    state: present
+  become: yes
+
+- name: Add ansible user to docker group
+  user: 
+    name: ansible
+    group: docker
+  become: yes
+
+# - name: Enable & start service firewalld
+#   systemd:
+#     name: firewalld
+#     state: started
+#     enabled: yes
+#   become: true
+
+# - name: Open ports on firewalld
+#   firewalld:
+#     port: "{{ item }}"
+#     permanent: yes
+#     state: enabled
+#     immediate: yes
+#   with_items:
+#     - 2376/tcp
+#     - 2377/tcp
+#     - 7946/tcp
+#     - 80/tcp
+#     - 7946/tcp
+#     - 4789/tcp
+#   become: true
+
+- name: Start and enable Docker services
+  systemd:
+    name: docker
+    state: started
+    enabled: true
+  become: yes
+
+- name: Change permissions on docker socket
+  file:
+    path: /var/run/docker.sock
+    mode: '0666'
+  become: yes
+
+- name: Create /app/docker directory
+  file:
+    path: /app/docker
+    state: directory
+    owner: ansible
+    mode: '0755'
+  become: yes

@@ -1,0 +1,28 @@
+---
+- name: Create /app/portainer
+  file:
+    path: /app/portainer
+    state: directory
+    owner: ansible
+    mode: '0755'
+  become: yes
+
+- name: Add root user to docker group
+  user: 
+    name: root
+    group: docker
+  become: yes
+
+- name: Download and start docker container
+  shell: |
+    docker run -d \
+      -p 9001:9001 \
+      --name portainer_agent \
+      --restart=always \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      -v /var/lib/docker/volumes:/var/lib/docker/volumes \
+      portainer/agent:2.19.4
+
+
+  ignore_errors: true
+  become: true

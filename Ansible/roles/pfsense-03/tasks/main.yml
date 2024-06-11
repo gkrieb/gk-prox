@@ -1,0 +1,55 @@
+---
+- name: Add port forwarding rule for PiHole
+  pfsensible.core.pfsense_nat_port_forward:
+    descr: 'pihole-01'
+    interface: wan
+    source: any:53
+    destination: 10.1.21.3:53
+    target: 10.1.23.31:53
+    associated_rule: pass
+    state: absent
+  become: true
+
+- name: Add port forwarding rule for Minecraft
+  pfsensible.core.pfsense_nat_port_forward:
+    descr: 'minecraft-portainer'
+    interface: wan
+    source: any
+    destination: 192.168.1.166:25569
+    target: 10.1.23.51:25569
+    associated_rule: pass
+    state: present
+  become: true
+
+- name: Add port forwarding rule for Portainer
+  pfsensible.core.pfsense_nat_port_forward:
+    descr: 'portainer-web'
+    interface: wan
+    source: any
+    destination: 192.168.1.166:9443
+    target: 10.1.23.50:9443
+    associated_rule: pass
+    state: present
+  become: true
+
+- name: Add port forwarding rule for Semaphore web
+  pfsensible.core.pfsense_nat_port_forward:
+    descr: 'semaphore-web'
+    interface: wan
+    source: any
+    destination: 192.168.1.166:3000
+    target: 10.1.23.30:3000
+    associated_rule: pass
+    state: present
+  become: true
+
+- name: Add port forwarding rule for Semaphore ssh
+  pfsensible.core.pfsense_nat_port_forward:
+    descr: 'semaphore-ssh'
+    interface: wan
+    source: any
+    destination: 192.168.1.166:22
+    target: 10.1.23.30:22
+    associated_rule: pass
+    state: present
+  become: true
