@@ -1,3 +1,4 @@
 ---
 collections:
   - name: pfsensible.core
+  - name: community.windows

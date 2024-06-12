@@ -7,6 +7,21 @@
         name: America/New_York
       become: true
 
+    - name: Check if line exists in sudoers file
+      command: grep -q "{{ ansible_user }} ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
+      register: grep_result
+      changed_when: false
+      ignore_errors: yes
+      bcome: true
+
+    - name: Add ansible user to sudoers file
+      lineinfile:
+        dest: /etc/sudoers
+        line: "{{ ansible_user }} ALL=(ALL) NOPASSWD:ALL"
+        validate: 'visudo -cf %s'
+      when: grep_result.rc != 0
+      become: true
+
     - name: Upgrade all rpm packages
       yum:
         name: '*'
@@ -41,6 +56,23 @@
   when: ansible_os_family == "Windows"
   vars:
   block:
+
+    - name: Create C:\Temp directory
+      win_file:
+        path: C:\Temp
+        state: directory
+
+    - name: Install chocolatey packages
+      win_chocolatey:
+        name: 
+          - vim
+        state: present
+
+    - name: Upgrade installed packages
+      win_chocolatey:
+        name: all
+        state: latest
+
     - name: Install Windows updates
       win_updates:
         category_names: "{{ windows_update_categories }}"

@@ -1,4 +1,11 @@
 ---
-- name: Shut down host
+- name: Shut down Linux hosts
   community.general.shutdown:
   become: true
+  when: ansible_os_family != "Windows"
+
+- name: Shut down Windows hosts
+  win_shell: 'shutdown /s /t 0'
+  async: 45
+  poll: 0
+  when: ansible_os_family == "Windows"

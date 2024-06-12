@@ -1,4 +1,10 @@
 ---
-- name: Reboot
+- name: Linux reboot
   become: true
+  when: ansible_os_family != "Windows"
   reboot:
+
+- name: Windows reboot
+  become: true
+  when: ansible_os_family == "Windows"
+  win_reboot:
