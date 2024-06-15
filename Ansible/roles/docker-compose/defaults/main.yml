@@ -1,0 +1,5 @@
+---
+app_name: "fileserver"
+app_dir: "/app/{{ app_name }}"
+docker_compose_file: "/home/ansible/gk-prox/Docker/{{ app_name }}/docker-compose.yml"
+env_file: "/home/ansible/gk-prox/Docker/{{ app_name }}/.env"

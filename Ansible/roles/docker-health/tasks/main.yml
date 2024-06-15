@@ -1,0 +1,34 @@
+---
+# - name: Get Docker containers facts
+#   docker_container_facts:
+
+# - name: Display Docker container health and status
+#   debug:
+#     msg: |
+#       Container {{ item.name }}:
+#         State: {{ item.state }}
+#         Health Status: {{ item.health_status | default('Not available') }}
+#   loop: "{{ ansible_facts.docker_container_facts.containers }}"
+
+- name: Install pip
+  yum:
+    name: pip
+  become: true
+
+- name: Install requests pip modules
+  pip:
+    name: requests==2.31.0
+
+- name: Get infos on container
+  docker_container_info:
+    name: minecraft-mc-1
+  register: result
+
+- name: Does container exist?
+  debug:
+    msg: "The container {{ 'exists' if result.exists else 'does not exist' }}"
+
+- name: Print information about container
+  debug:
+    var: result.container
+  when: result.exists

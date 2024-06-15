@@ -1,9 +1,13 @@
-repo/
+# Ansible - Private
 test.yml
 vars/
-gk-prox-inv.yml
+Ansible/inventories/*
 tableau-tests/
 win-test/
 set-static-ip
 iis-install/
-Docker/
+
+# Docker
+Docker/ansible-playground
+Docker/mc-env
+.env

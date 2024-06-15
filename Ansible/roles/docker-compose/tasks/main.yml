@@ -1,0 +1,37 @@
+---
+- name: Ensure application directory exists
+  file:
+    path: "{{ app_dir }}"
+    state: directory
+    owner: ansible
+  become: true
+
+- name: Deploy Docker Compose script
+  copy:
+    src: "{{ docker_compose_file }}"
+    dest: "{{ app_dir }}/docker-compose.yml"
+
+- name: Deploy .env file
+  copy:
+    src: "{{ env_file }}"
+    dest: "{{ app_dir }}/.env"
+
+- name: Stop Docker Compose if already running
+  shell: docker compose down
+  args:
+    chdir: "{{ app_dir }}"
+  ignore_errors: true
+
+- name: Start Docker Compose
+  shell: docker compose up -d
+  args:
+    chdir: "{{ app_dir }}"
+  register: compose_up_output
+
+- name: Wait for Docker Compose to start
+  pause:
+    seconds: 30
+
+- name: Debug Docker Compose up output
+  debug:
+    msg: "{{ compose_up_output.stdout }}"
