@@ -1,10 +1,4 @@
 ---
-- name: Run shell commands
-  shell: |
-    hostname
-    whoami
-  register: shell_output
-
-- name: Print shell output
+- name: Inventory facts
   debug:
-    msg: "{{ shell_output }}"
+    msg: "{{ inventory_hostname }} - {{ ansible_date_time.date }} - {{ ansible_date_time.time }}"

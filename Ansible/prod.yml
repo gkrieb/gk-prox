@@ -16,3 +16,20 @@
     - shutdown_cycle
   tags:
     - shutdown_cycle
+
+- name: Respond Cycle
+  hosts: all
+  roles:
+    - respond
+  tags:
+    - respond
+
+- name: Minecraft Backup Cycle
+  hosts: port-p01,localhost
+  vars:
+    mc_server: port-p01
+    backup_server: localhost
+  roles:
+    - mc-backup
+  tags:
+    - mc-backup

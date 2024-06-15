@@ -1,0 +1,6 @@
+---
+backup_src_dir: "/app/minecraft/world"
+backup_dest_dir: "/tmp"
+backup_remote_dir: "/mc_backups/"
+server1_hostname: "server1.example.com"
+server2_hostname: "server2.example.com"

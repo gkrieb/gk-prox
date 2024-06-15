@@ -1,0 +1,39 @@
+---
+- name: Set the backup file name as a fact
+  set_fact:
+    backup_file: "{{ backup_dest_dir }}/world_backup_{{ ansible_date_time.date }}.tar.gz"
+  delegate_to: "{{ mc_server }}"
+
+- name: Ensure backup destination directory exists on Minecraft server
+  file:
+    path: "{{ backup_dest_dir }}"
+    state: directory
+  delegate_to: "{{ mc_server }}"
+
+- name: Gzip the world directory on Minecraft server
+  command: >
+    tar -czf {{ backup_file }} -C {{ backup_src_dir }} .
+  delegate_to: "{{ mc_server }}"
+  run_once: true
+
+- name: Ensure backup directory exists on backup server
+  file:
+    path: "{{ backup_remote_dir }}"
+    state: directory
+    owner: ansible
+  become: true
+  delegate_to: "{{ backup_server }}"
+
+- name: Copy the gzip file to backup server
+  fetch:
+    src: "{{ backup_file }}"
+    dest: "{{ backup_remote_dir }}"
+    flat: yes
+  delegate_to: "{{ mc_server }}"
+  run_once: true
+
+- name: Remove the gzip file from Minecraft server
+  file:
+    path: "{{ backup_file }}"
+    state: absent
+  delegate_to: "{{ mc_server }}"

@@ -5,3 +5,5 @@ gk-prox-inv.yml
 tableau-tests/
 win-test/
 set-static-ip
+iis-install/
+Docker/

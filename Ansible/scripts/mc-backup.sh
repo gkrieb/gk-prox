@@ -1,5 +1,5 @@
 #!/bin/bash
 ansible-playbook \
     -i ../inventories/gk-prox-inv.yml \
-    --ask-become-pass \
-    ../test.yml 
+    --tags "mc-backup" \
+    ../prod.yml 

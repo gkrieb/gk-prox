@@ -12,7 +12,7 @@
       register: grep_result
       changed_when: false
       ignore_errors: yes
-      bcome: true
+      become: true
 
     - name: Add ansible user to sudoers file
       lineinfile:
