@@ -1,9 +1,10 @@
 ---
 - name: Inventory facts
   debug:
-    msg: |
-      {{ inventory_hostname }}
-      {{ ansible_date_time.date }}
-      {{ ansible_date_time.time }}
-      {{ ansible_os_family }}
-      {{ ansible_distribution }}
+    msg:
+      - "Hostname: {{ inventory_hostname }}"
+      - "Date: {{ ansible_date_time.date }}"
+      - "Time: {{ ansible_date_time.time }}"
+      - "OS Family: {{ ansible_os_family }}"
+      - "OS Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+    
