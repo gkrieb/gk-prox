@@ -1,0 +1,21 @@
+--- 
+- name: Ensure /etc/profile.d/custom_env.sh exists
+  ansible.builtin.file:
+    path: /etc/profile.d/custom_env.sh
+    state: touch
+    mode: '0644'
+  become: true
+
+- name: Set environment variables
+  ansible.builtin.lineinfile:
+    path: /etc/profile.d/custom_env.sh
+    line: 'export {{ item.key }}="{{ item.value }}"'
+    create: yes
+  with_items: "{{ env_vars }}"
+  become: true
+
+- name: Ensure /etc/profile.d/custom_env.sh is executable
+  ansible.builtin.file:
+    path: /etc/profile.d/custom_env.sh
+    mode: '0755'
+  become: true

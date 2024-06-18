@@ -1,0 +1,25 @@
+---
+- name: Create docker group
+  group:
+    name: docker
+    state: present
+  become: true
+
+- name: Add ansible user to docker group
+  user: 
+    name: ansible
+    group: docker
+  become: true
+
+- name: Start and enable Docker services
+  systemd:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+
+- name: Change permissions on docker socket
+  file:
+    path: /var/run/docker.sock
+    mode: '0666'
+  become: true

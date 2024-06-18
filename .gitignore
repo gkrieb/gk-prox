@@ -6,6 +6,9 @@ tableau-tests/
 win-test/
 set-static-ip
 iis-install/
+cloudwatch-install/
+vault.yml
+*.log
 
 # Docker
 Docker/ansible-playground

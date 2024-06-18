@@ -1,0 +1,66 @@
+---
+- name: Set timezone to America/New_York
+  community.general.timezone:
+    name: America/New_York
+  become: true
+
+- name: Check if line exists in sudoers file
+  command: grep -q "{{ ansible_user }} ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
+  register: grep_result
+  changed_when: false
+  ignore_errors: yes
+  become: true
+
+- name: Add ansible user to sudoers file
+  lineinfile:
+    dest: /etc/sudoers
+    line: "{{ ansible_user }} ALL=(ALL) NOPASSWD:ALL"
+    validate: 'visudo -cf %s'
+  when: grep_result.rc != 0
+  become: true
+
+- name: Install rpm packages
+  when: ansible_os_family == "RedHat"
+  block:
+    - name: Upgrade all rpm packages
+      yum:
+        name: '*'
+        state: latest
+      become: true
+
+    - name: Install rpm packages
+      yum:
+        name: 
+          - wget
+          - nmap
+          - vi
+          - python3-pip
+      become: true
+
+- name: Install deb packages
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Upgrade all apt packages
+      apt:
+        update_cache: true
+        name: "*"
+        state: latest
+      become: true
+
+    - name: Install apt packages
+      apt:
+        name: 
+          - wget
+          - nmap
+          - vi
+          - python3-pip
+      become: true
+
+- name: Upgrade all FreeBSD packages
+  shell: pkg-static update -fq
+  become: true
+  when: ansible_distribution == "FreeBSD"
+
+- name: Reboot
+  become: true
+  reboot:

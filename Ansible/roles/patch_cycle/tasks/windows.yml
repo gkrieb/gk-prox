@@ -1,0 +1,30 @@
+---
+- name: Set timezone
+  win_timezone:
+    timezone: Eastern Standard Time
+
+- name: Create C:\Temp directory
+  win_file:
+    path: C:\Temp
+    state: directory
+
+- name: Install chocolatey packages
+  win_chocolatey:
+    name: 
+      - vim
+    state: present
+
+- name: Upgrade installed packages
+  win_chocolatey:
+    name: all
+    state: latest
+
+- name: Install Windows updates
+  win_updates:
+    category_names: "{{ windows_update_categories }}"
+    state: installed
+  register: update_result
+
+- name: Reboot the server if necessary
+  win_reboot:
+  when: update_result.reboot_required

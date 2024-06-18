@@ -1,4 +1,9 @@
 ---
 - name: Inventory facts
   debug:
-    msg: "{{ inventory_hostname }} - {{ ansible_date_time.date }} - {{ ansible_date_time.time }}"
+    msg: |
+      {{ inventory_hostname }}
+      {{ ansible_date_time.date }}
+      {{ ansible_date_time.time }}
+      {{ ansible_os_family }}
+      {{ ansible_distribution }}
