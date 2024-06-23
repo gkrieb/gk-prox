@@ -9,6 +9,7 @@ iis-install/
 cloudwatch-install/
 vault.yml
 *.log
+awx-install
 
 # Docker
 Docker/ansible-playground
