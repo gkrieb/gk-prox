@@ -1,6 +1,6 @@
 ---
 - name: Patch Cycle
-  hosts: all,!pfsense,!ansible-c01
+  hosts: all,!pfsense
   serial: 1
   ignore_errors: true
   ignore_unreachable: true
@@ -10,7 +10,7 @@
     - patch_cycle
 
 - name: Shutdown Cycle
-  hosts: all,!pfsense,!ansible-c01
+  hosts: all,!pfsense,!localhost
   serial: 1
   roles:
     - shutdown_cycle

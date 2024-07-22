@@ -64,3 +64,4 @@
 - name: Reboot
   become: true
   reboot:
+  when: inventory_hostname != 'localhost'

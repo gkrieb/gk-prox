@@ -1,5 +1,5 @@
 #!/bin/bash
 ansible-playbook \
-    -i ../inventories/gk-prox-inv.yml \
+    -i ~/gk-prox/Ansible/inventories/gk-prox-inv.yml \
     --tags "patch_cycle" \
-    ../prod.yml 
+    ~/gk-prox/Ansible/prod.yml 
